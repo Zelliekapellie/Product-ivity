@@ -11,20 +11,29 @@ using System.Net.Http.Headers;
 
 namespace Product_ivity.Controllers {
     public class ProductController : Controller {
-        private string baseUrl = "https://gendacproficiencytest.azurewebsites.net/API/";
+        private string baseUrl = "https://gendacproficiencytest.azurewebsites.net/API/ProductsAPI/";
+
+        /// <summary>
+        /// Get all products
+        /// </summary>
+        /// <returns>List of products</returns>
         public async Task<ActionResult> Index() {
             GridVM<ProductModel> ProductInfo = new GridVM<ProductModel>(); // fix model type
-            using (var client = new HttpClient()) {
 
-                //Passing service base url
-                client.BaseAddress = new Uri(baseUrl);
-                client.DefaultRequestHeaders.Clear();
+           using (var client = new HttpClient()) {
 
-                //Define request data format
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpRequestMessage reqMes = new HttpRequestMessage {
+                    RequestUri = new Uri(baseUrl),
+                    Method = HttpMethod.Get
+                };
+                HttpResponseMessage Res = new HttpResponseMessage();
+                try {
 
-                //Sending request to find web api REST service resource 
-                HttpResponseMessage Res = await client.GetAsync("ProductsAPI/");
+                    //Sending request to find web api REST service resource 
+                     Res = await client.SendAsync(reqMes).ConfigureAwait(false);
+                } catch(Exception e) {
+                    return View( e.Message);
+                }
 
                 //Checking the response is successful or not which is sent using HttpClient
                 if (Res.IsSuccessStatusCode) {
@@ -38,7 +47,7 @@ namespace Product_ivity.Controllers {
                     ModelState.AddModelError(string.Empty, "Error retrieving list of products. Please contact support");
                 }
                 //returning the employee list to view
-                return View(ProductInfo);
+                return View("~/Views/Home/About.cshtml", ProductInfo);
             }
         }
 

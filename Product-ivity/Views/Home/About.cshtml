@@ -3,7 +3,9 @@
 @{
     ViewBag.Title = "Home Page";
 }
-
+@{ 
+    var model = @Html.Raw(Json.Encode(Model));
+} 
 <div id="mySidebar" class="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
     @Html.Label("Filter")
@@ -12,38 +14,39 @@
     <a href="#">Contact</a>
 </div>
 
-<div class="bg-primary"
-    <table class="table">
-        <tr>
-            <th width="150px">
-                ID
-            </th>
-            <th width=25%>
-                Name
-            </th>
-            <th width=25%>
-                Cetegory
-            </th>
-            <th width=25%>
-                Price
-            </th>
-        </tr>
-
-        @foreach (var item in Model.Entries) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                </td>
-            </tr>
-        }
-
-    </table>
+<div class="demo-container">
+    <div id="gridContainer"></div>
 </div>
+
+@*<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Entries.Any()) {
+                foreach (var item in Model.Entries) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category)
+                        </td>
+                        <td>
+                            R @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>*@

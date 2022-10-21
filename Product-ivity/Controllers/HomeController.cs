@@ -10,12 +10,6 @@ namespace Product_ivity.Controllers {
             return View();
         }
 
-        public ActionResult About() {
-
-            var response = new ProductController().Index();
-            return View(response);
-        }
-
         public ActionResult Contact() {
             ViewBag.Message = "Your contact page.";
 

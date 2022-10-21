@@ -6,6 +6,8 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/Custom/SideBar.css")
+    @Styles.Render("~/Content/Custom/Table.css")
+    @Styles.Render("~/Content/bootsrap.min.css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -22,7 +24,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("About", "Index", "Product")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
             </div>
@@ -44,6 +46,9 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/Scripts/Custom/SideBar.js")
+    @Scripts.Render("~/Scripts/Custom/Datagrid.js")
+    @Scripts.Render("~/Scripts/bootstrap.min.js")
+    @Scripts.Render("~/Scripts/jquery.min.js")
     @RenderSection("scripts", required: false)
 </body>
 </html>
