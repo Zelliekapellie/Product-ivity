@@ -7,7 +7,14 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/Custom/SideBar.css")
     @Styles.Render("~/Content/Custom/Table.css")
-    @Styles.Render("~/Content/bootsrap.min.css")
+    @Scripts.Render("~/Scripts/jquery-3.4.1.min.js")
+    @Scripts.Render("https://code.jquery.com/jquery-3.6.1.min.js")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Scripts/Custom/SideBar.js")
+    @Scripts.Render("https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js")
+    @Scripts.Render("~/Scripts/paging.js")
+    @RenderSection("scripts", required: false)
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -37,18 +44,12 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+        <div id="ErrorMessage" class="modal" tabindex="-1" role="dialog"></div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/Scripts/Custom/SideBar.js")
-    @Scripts.Render("~/Scripts/Custom/Datagrid.js")
-    @Scripts.Render("~/Scripts/bootstrap.min.js")
-    @Scripts.Render("~/Scripts/jquery.min.js")
-    @RenderSection("scripts", required: false)
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>
+        </div>
 </body>
 </html>

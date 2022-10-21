@@ -4,10 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Product_ivity.Models
-{
-    public class ProductModel 
-    {
+namespace Product_ivity.Models {
+    public class ProductModel {
         /// <summary>
         /// Product ID
         /// </summary>
@@ -27,5 +25,17 @@ namespace Product_ivity.Models
         /// Product Price
         /// </summary>
         public double Price { get; set; }
+
+        /// <summary>
+        /// Enum for dropdown
+        /// </summary>
+        public Categories cList { get; set; }
     }
+
+    public enum Categories{
+        CategoryA = 1,
+            CatgegoryB = 2,
+            CategoryC = 3
+
+        }
 }

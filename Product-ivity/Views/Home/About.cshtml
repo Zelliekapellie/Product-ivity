@@ -3,9 +3,8 @@
 @{
     ViewBag.Title = "Home Page";
 }
-@{ 
-    var model = @Html.Raw(Json.Encode(Model));
-} 
+
+@Scripts.Render("~/Scripts/Custom/Datagrid.js")
 <div id="mySidebar" class="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
     @Html.Label("Filter")
@@ -14,39 +13,151 @@
     <a href="#">Contact</a>
 </div>
 
-<div class="demo-container">
-    <div id="gridContainer"></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary list-panel" id="list-panel">
+            <div class="panel-heading list-panel-heading">
+                <h1 class="panel-title list-panel-title">Products</h1>
+            </div>
+            <div class="panel-body">
+                <table id="products-data-table"
+                       class="table table-striped table-bordered"
+                       style="width:100%">
+                    <thead>
+                        <tr>
+                            <th> Save</th>
+                            <th>ID</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th> Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Entries.Any()) {
+                            foreach (var item in Model.Entries) {
+                                <tr>
+                                    <td>
+                                        <button type='button' onclick='productUpdate(this);' class='btn btn-default'>
+                                            <span class='glyphicon glyphicon-edit' />"
+                                        </button>
+                                    </td>
+                                    <td contenteditable="false" id="@item.Id">
+                                        @Html.DisplayFor(modelItem => item.Id)
+                                    </td>
+                                    <td contenteditable="true" class="editable">
+                                        @Html.TextBoxFor(modelItem => item.Name)
+                                    </td>
+                                    <td contenteditable="true" class="editable">
+                                        @Html.TextBoxFor(modelItem => item.Category)
+                                    </td>
+                                    <td contenteditable="true" class="editable">
+                                        R @Html.TextBoxFor(modelItem => item.Price)
+                                    </td>
+                                    <td>
+                                        <button type='button'
+                                                onclick='productDelete(this);'
+                                                class='btn btn-default'>
+                                            <span class='glyphicon glyphicon-remove' />
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
-@*<div class="container">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Product Name</th>
-                <th>Category</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Entries.Any()) {
-                foreach (var item in Model.Entries) {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Id)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Category)
-                        </td>
-                        <td>
-                            R @Html.DisplayFor(modelItem => item.Price)
-                        </td>
-                    </tr>
+
+    <div  id="ErrorMessage" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@{ 
+    var isCreate = true;
+}
+    <div id="Input" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create/Update Product</h5>
+                    <button type="button" class="close" onclick='$("#Input").hide()' data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="InputForm">
+                <div class="modal-body">
+
+                    <div id="Name">
+                        @Html.Label("Product Name")
+                    </div>
+                    <div id="NameInput">
+                        @Html.TextBox("name")
+                     </div>
+                    
+                    <div id="Category">
+                        @Html.Label("category")
+                    </div>
+                    <div id="cList">
+                        @Html.EnumDropDownListFor(category => category.Entries.First().cList)
+                         </div>
+                    
+                    <div id="Price">
+                        @Html.Label("Price")
+                    </div>
+                    <div id="PriceInput">
+                        @Html.Editor("price")
+                     </div>
+
+                </div>
+                    </form>
+                <div class="modal-footer">
+                    <button type="button" onclick='$("#Input").hide()' class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" onclick='productsAdd($("#InputForm"))' class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+@*@section Scripts
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $('#products-data-table').DataTable();
+
+            });
+
+            $('#products-data-table').on('click', 'tbody td:not(:first-child)', function (e) {
+                if (this.attr() != "ID") {
+                    this.attr(' contenteditable="true"');
                 }
-            }
-        </tbody>
-    </table>
-</div>*@
+            });
+        </script>
+    }
+
+    <div class="container">
+            <table class="table">
+
+            </table>
+        </div>*@

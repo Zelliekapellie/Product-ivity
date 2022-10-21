@@ -1,114 +1,85 @@
-﻿// This was copied and adapted from DevExpress https://js.devexpress.com/Demos/WidgetsGallery/Demo/DataGrid/BatchUpdateRequest/jQuery/Light/
-$(() => {
-    const loadPanel = $('#loadPanel').dxLoadPanel({
-        position: {
-            of: '#gridContainer',
-        },
-        visible: false,
-    }).dxLoadPanel('instance');
+﻿let lastID = 0;
+$(document).ready(function () {
 
-    loadPanel.show();
-    dataGrid.option('dataSource', model);
 
-    const dataGrid = $('#gridContainer').dxDataGrid({
-        keyExpr: 'Id',
-        showBorders: true,
-        dataSource: [],
-        editing: {
-            mode: 'row',
-            allowAdding: true,
-            allowUpdating: true,
-            allowDeleting: true,
-        },
-        repaintChangesOnly: true,
-        onOptionChanged(e) {
-            if (e.name === 'editing') {
-                const editRowKey = e.component.option('editing.editRowKey');
-                let changes = e.component.option('editing.changes');
+    lastID = $('#products-data-table tr:last').find("td:eq(1)").attr("id");
 
-                $('#editRowKey').text(editRowKey === null ? 'null' : editRowKey);
+    $('#products-data-table').DataTable();
 
-                changes = changes.map((change) => ({
-                    type: change.type,
-                    key: change.type !== 'insert' ? change.key : undefined,
-                    data: change.data,
-                }));
-
-                $('#changes').text(JSON.stringify(changes, null, ' '));
-            }
-        },
-        onSaving(e) {
-            const change = e.changes[0];
-
-            if (change) {
-                e.cancel = true;
-                loadPanel.show();
-                e.promise = saveChange(URL, change)
-                    .always(() => { loadPanel.hide(); })
-                    .then((data) => {
-                        let orders = e.component.option('dataSource');
-
-                        if (change.type === 'insert') {
-                            change.data = data;
-                        }
-                        orders = DevExpress.data.applyChanges(orders, [change], { keyExpr: 'OrderID' });
-
-                        e.component.option({
-                            dataSource: orders,
-                            editing: {
-                                editRowKey: null,
-                                changes: [],
-                            },
-                        });
-                    });
-            }
-        },
-        columns: [{
-            dataField: 'OrderID',
-            allowEditing: false,
-        }, {
-            dataField: 'ShipName',
-        }, {
-            dataField: 'ShipCountry',
-        }, {
-            dataField: 'ShipCity',
-        }, {
-            dataField: 'ShipAddress',
-        }, {
-            dataField: 'OrderDate',
-            dataType: 'date',
-        }, {
-            dataField: 'Freight',
-        }],
-    }).dxDataGrid('instance');
-
-    function saveChange(url, change) {
-        switch (change.type) {
-            case 'insert':
-                return sendRequest(`${url}/InsertOrder`, 'POST', { values: JSON.stringify(change.data) });
-            case 'update':
-                return sendRequest(`${url}/UpdateOrder`, 'PUT', { key: change.key, values: JSON.stringify(change.data) });
-            case 'remove':
-                return sendRequest(`${url}/DeleteOrder`, 'DELETE', { key: change.key });
-            default:
-                return null;
-        }
-    }
-
-    function sendRequest(url, method = 'GET', data) {
-        const d = $.Deferred();
-
-        $.ajax(url, {
-            method,
-            data,
-            cache: false,
-            xhrFields: { withCredentials: true },
-        }).then((result) => {
-            d.resolve(method === 'GET' ? result.data : result);
-        }, (xhr) => {
-            d.reject(xhr.responseJSON ? xhr.responseJSON.Message : xhr.statusText);
-        });
-
-        return d.promise();
-    }
+    $('#products-data-table table tbody tr td input').change(function (e) {
+        console.log("change");
+        $(this).addClass("edited");
+        $(this).addClass("bg-blue");
+    });
 });
+
+function errorModal(message) {
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+    })
+}
+
+function productsAdd(data) {
+    
+    let id = lastID + 1;
+    let productName = $(data).find("#name").val();
+    let productCategory = $(data).find("#clist").val();
+    let price = $(data).find("#price").val();
+
+    //if (productName == "undefined" || productName == "") {
+    //    errorModal("Please enter a product name");
+    //}
+
+    $.ajax({
+        type: "POST",
+        url: "Product/Create",
+        dataType: "json",
+        data: { pname: productName, pcategory: productCategory, price: price },
+        success: function (data, status) { alert(data); },
+        error: function () {
+            alert("error");
+        }
+
+    });
+}
+
+function productDelete(ctl) {
+    $(ctl).parents("tr").remove();
+}
+
+function productUpdate() {
+    console.log("edit");
+    $("#Input").show();
+    $('#Input').on('shown.bs.modal', function () {
+        $('#Input').trigger('focus')
+    });
+    //if ($("#updateButton").text() == "Update") {
+    //    productUpdateInTable();
+    //}
+    //else {
+    //    productAddToTable();
+    //}
+
+    //// Clear form fields
+    //formClear();
+
+    //// Focus to product name field
+    //$("#productname").focus();
+}
+
+function productUpdateInTable() {
+    debugger;
+    // Add changed product to table
+    $(_row).after(productBuildTableRow());
+
+    // Remove old product row
+    $(_row).remove();
+
+    // Clear form fields
+    formClear();
+
+    // Change Update Button Text
+    $("#updateButton").text("Add");
+}
+
+

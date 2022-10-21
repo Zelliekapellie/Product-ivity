@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 
 namespace Product_ivity.Controllers {
+    [RouteArea("Product")]
     public class ProductController : Controller {
         private string baseUrl = "https://gendacproficiencytest.azurewebsites.net/API/ProductsAPI/";
 
@@ -51,63 +52,78 @@ namespace Product_ivity.Controllers {
             }
         }
 
-            // GET: Product/Details/5
-            //public ActionResult Details(int id) {
-            //    return View();
-            //}
+        // POST: Product/Create
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="category"></param>
+        /// <param name="price"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<string> Create(string pname, string pcategory, string price) {
+            string returnMessage = "";
+            try {
+                using (var client = new HttpClient()) {
 
-            //// GET: Product/Create
-            //public ActionResult Create() {
-            //    return View();
-            //}
+                    HttpRequestMessage reqMes = new HttpRequestMessage {
+                        RequestUri = new Uri(baseUrl),
+                        Method = HttpMethod.Post
+                    };
+                    HttpResponseMessage Res = new HttpResponseMessage();
+                    try {
 
-            //// POST: Product/Create
-            //[HttpPost]
-            //public ActionResult Create(FormCollection collection) {
-            //    try {
-            //        // TODO: Add insert logic here
+                        //Sending request to find web api REST service resource 
+                        Res = await client.SendAsync(reqMes).ConfigureAwait(false);
+                    }
+                    catch (Exception e) {
+                        returnMessage = e.Message;
+                    }
 
-            //        return RedirectToAction("Index");
-            //    }
-            //    catch {
-            //        return View();
-            //    }
-            //}
+                    //Checking the response is successful or not which is sent using HttpClient
+                    if (Res.IsSuccessStatusCode) {
+                        returnMessage = "OK";
+                    }
+                    else {
+                        returnMessage = "Error creating product. Please contact support";
+                    }
+                }
 
-            //// GET: Product/Edit/5
-            //public ActionResult Edit(int id) {
-            //    return View();
-            //}
-
-            //// POST: Product/Edit/5
-            //[HttpPost]
-            //public ActionResult Edit(int id, FormCollection collection) {
-            //    try {
-            //        // TODO: Add update logic here
-
-            //        return RedirectToAction("Index");
-            //    }
-            //    catch {
-            //        return View();
-            //    }
-            //}
-
-            //// GET: Product/Delete/5
-            //public ActionResult Delete(int id) {
-            //    return View();
-            //}
-
-            //// POST: Product/Delete/5
-            //[HttpPost]
-            //public ActionResult Delete(int id, FormCollection collection) {
-            //    try {
-            //        // TODO: Add delete logic here
-
-            //        return RedirectToAction("Index");
-            //    }
-            //    catch {
-            //        return View();
-            //    }
-            //}
+                return returnMessage;
+            }
+            catch {
+                return "Error creating product. Please contact support";
+            }
         }
+
+        
+
+        //// POST: Product/Edit/5
+        //[HttpPost]
+        //public ActionResult Edit(int id, FormCollection collection) {
+        //    try {
+        //        // TODO: Add update logic here
+
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch {
+        //        return View();
+        //    }
+        //}
+
+        
+
+        //// POST: Product/Delete/5
+        //[HttpPost]
+        //public ActionResult Delete(int id, FormCollection collection) {
+        //    try {
+        //        // TODO: Add delete logic here
+
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch {
+        //        return View();
+        //    }
+        //}
     }
+}
