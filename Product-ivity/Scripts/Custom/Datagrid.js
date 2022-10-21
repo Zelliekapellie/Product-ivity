@@ -24,23 +24,24 @@ function productsAdd(data) {
     let id = lastID + 1;
     let productName = $(data).find("#name").val();
     let productCategory = $(data).find("#clist").val();
+    console.log($("#InputForm").find("select#clist"));
     let price = $(data).find("#price").val();
 
     //if (productName == "undefined" || productName == "") {
     //    errorModal("Please enter a product name");
     //}
 
-    $.ajax({
-        type: "POST",
-        url: "Product/Create",
-        dataType: "json",
-        data: { pname: productName, pcategory: productCategory, price: price },
-        success: function (data, status) { alert(data); },
-        error: function () {
-            alert("error");
-        }
+    //$.ajax({
+    //    type: "POST",
+    //    url: "Product/Create",
+    //    dataType: "json",
+    //    data: { pname: productName, pcategory: productCategory, price: price },
+    //    success: function (data, status) { alert(data); },
+    //    error: function () {
+    //        alert("error");
+    //    }
 
-    });
+    //});
 }
 
 function productDelete(ctl) {
